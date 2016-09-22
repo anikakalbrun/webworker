@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style>
+    h1 {
+        color: green;
+        font-size: 300%;
+        font-weight: 900;
+        margin: 2%;
+    }
+    
+    h2 {
+        font-size: 200%;
+        font-weight: 700;
+    }
+    
+    button {
+        width: 60px;
+        height: 30px;
+        padding: 10px 10px 15px 10px;
+        background-color: green;
+        color: white;
+        font-family: serif;
+        margin: 5px;
+        border: none;
+        border-radius: 10px;
+        text-align: center;
+        
+    }
+    input {
+        width: 120px;
+        height: 40px;
+        font-family: serif;
+        margin: 5px;
+    }
+    .cont {
+        border: 1px 2px 2px 1px solid grey;
+        border-top: 1px solid white;
+        border-left: 1px solid lightgrey;
+        box-shadow: 5px 5px 10px;
+        width: 380px;
+        padding: 30px;
+        border-radius: 5px;
+    }
+    
+    .flex-container {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+    }
+    .flex-item {
+        margin-left: 5%;
+    }
+    
+</style>
+</head>
+  
+<body>
+    <h1>Converter </h1>  
+    <div class="flex-container">
+        <div class="flex-item">
+        <div class=" jumbotron cont">
+            <form>
+                <label>Enter an number in deg:</label>
+                <input type="number" name="number" required="required">
+            </form> 
+            <br>
+            <div class="btn-container">
+                <button data-opp="sin">sin(x)</button>
+                <button data-opp="cos">cos(x)</button>
+                <button data-opp="tan">tan(x)</button>
+                <button data-opp="ctg">ctg(x)</button><br>
+           <!--     <button data-opp="asin">asin(x)</button>
+                <button data-opp="acos">acos(x)</button>
+                <button data-opp="atan">atan(x)</button>
+                <button data-opp="actg">actg(x)</button>-->
+            </div>
+        </div>
+        </div>
+
+        <div class="flex-item">
+            <h2>Result:</h2>
+            <h3></h3>
+        </div>
+    </div>
+
+      
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ <script>
+    
+    (function() {
+        
+          if (typeof(Worker) !== "undefined") {
+
+               var worker = new Worker('WebWorker.js');
+              
+                worker.addEventListener('message', function(e) {
+                  
+                    $("h3").text(e.data);
+                }, false);
+              
+              
+              
+               $("div.btn-container").on("click", "button", function() {
+                   if ($("input").val() === "" || null) {
+                       $("h3").text("Plaese provite a number that can be converted")
+                   } else {
+                       var $this =$(this);
+                       obj = {
+                           comand: $this.data("opp").toString(),
+                           value: $("input").val()
+                       }
+                      // var a = JSON.stringify(obj);
+                      // console.log(a)
+                        worker.postMessage(obj);
+                   }
+                
+               
+                   
+                 //  console.log(comand);
+                   
+               });
+
+               
+               
+            } else {
+                $("h3").text("Sorry! No Web Worker support..");
+            }
+
+        
+        
+        
+    })();
+    
+    
+</script>   
+    
+</body>
+
+</html>
